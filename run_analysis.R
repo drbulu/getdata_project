@@ -64,6 +64,10 @@ train.dataset <- cbind(train.subject, train.y, train.X) ; head(train.dataset)
 whole.dataset <- rbind(test.dataset, train.dataset)
 
 # removing redundant objects from the environment to conserve memory!
+rm(test.dataset, train.dataset, train.subject, train.X, train.y, 
+   test.subject, test.X, test.y, trainDir, trainSubjectFile, 
+   trainXFile, trainYFile, testDir, testSubjectFile, testXFile, testYFile
+   )
 
 #annotating data frame(s) 
     # (or you could do this AFTER merging,to save some cycles)
@@ -76,21 +80,19 @@ names(feature.names) <- c("feature.ID", "Name")
  
 # clean up the feature.names entries
     # help from regex: http://stat.ethz.ch/R-manual/R-patched/library/base/html/regex.html
-sanitizeFeatNames <- function(row){    
+
     # 1: removes all punctuation characters and replaces them with dots
-    tmp <- gsub("[[:punct:]]", ".", row)
+tmp <- gsub("[[:punct:]]", ".", feature.names$Name)
     # 2: removes multiple dots (i.e 2 or more) and replace with a single dot
-    tmp <- gsub("[\\.]{2,5}", ".", row)
+tmp <- gsub("[\\.]{2,5}", ".", tmp)
     # 3: remove dots from the end of the feature names
-    tmp <- gsub("(\\.)+$", "", row)
-    return ( tmp )    
-}
+Sanitized.Name <- gsub("(\\.)+$", "", tmp)
 
 # Sanitize the feature names and add them to the feature.names table
-Sanitized.Name <- sanitizeFeatNames(feature.names$Name)
 sanitized.feature.names <- cbind(feature.names, Sanitized.Name)
 
-names(whole.dataset) <- c( "Subject.ID", "Activity.Name", sanitized.feature.names$Sanitized.Name)
+# Sanitized.Name contents are factors, need to coerse to characters for this to work :)
+names(whole.dataset) <- c( "Subject.ID", "Activity.Name", as.character(sanitized.feature.names$Sanitized.Name) )
 
 # convert the activity labels to human readable form 
     #create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
@@ -101,17 +103,17 @@ names(activity.labels) <- c("Activity.ID", "Activity.Name")
 
 # testing
 
-gsub(actvity.labels$Activity.ID, actvity.labels$Activity.ID, whole.dataset)
-gsub("[\\1]", "WALKING", whole.dataset)
-apply()
+#gsub(actvity.labels$Activity.ID, actvity.labels$Activity.ID, whole.dataset)
+#gsub("[\\1]", "WALKING", whole.dataset)
+#apply()
 
 # create subset of ONLY the mean and standard deviation (std) columns
     # obtain the required rows from the complete dataset
-meanCols <- grep("mean|std", names(whole.datasetfeature.names$feat.name, value=T)
+meanCols <- 
     # use these rows to create the tidy data
 tidyCol <- c(whole.dataset$Subject.ID, whole.dataset$Activity.Name, meanCols)
 tidy.data <- whole.dataset[, tidyCol]
 
 # then cat the output to a CSV file :) :)
-write.table(tidy.data, file = "tidy_data.csv", quote = F, sep = ",")
+#write.table(tidy.data, file = "tidy_data.csv", quote = F, sep = ",")
 
