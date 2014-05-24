@@ -58,77 +58,60 @@ train.y <- read.table(trainYFile)
 test.dataset <- cbind(test.subject, test.y, test.X) ; head(test.dataset)
 train.dataset <- cbind(train.subject, train.y, train.X) ; head(train.dataset)
 
+# remove the test.sub
+
 # combine the test and training datasets to get the complete dataset
 whole.dataset <- rbind(test.dataset, train.dataset)
 
+# removing redundant objects from the environment to conserve memory!
 
 #annotating data frame(s) 
     # (or you could do this AFTER merging,to save some cycles)
     # after all, the order of columns is the SAME!
-
     # 1: preparing the annotations
     #need to import info from features and activity 
 feature.names <- read.table( paste(dataDir, "features.txt", sep="/") )
  # give the feature names data frame columns nice names
 names(feature.names) <- c("feature.ID", "Name")
- # clean up the feature.names entries
+ 
+# clean up the feature.names entries
+    # help from regex: http://stat.ethz.ch/R-manual/R-patched/library/base/html/regex.html
+sanitizeFeatNames <- function(row){    
+    # 1: removes all punctuation characters and replaces them with dots
+    tmp <- gsub("[[:punct:]]", ".", row)
+    # 2: removes multiple dots (i.e 2 or more) and replace with a single dot
+    tmp <- gsub("[\\.]{2,5}", ".", row)
+    # 3: remove dots from the end of the feature names
+    tmp <- gsub("(\\.)+$", "", row)
+    return ( tmp )    
+}
 
-#sanitized.feature.names
+# Sanitize the feature names and add them to the feature.names table
+Sanitized.Name <- sanitizeFeatNames(feature.names$Name)
+sanitized.feature.names <- cbind(feature.names, Sanitized.Name)
 
-#This should hopefully work :)
-# 1: removes all punctuation characters and replaces them with dots
-    # sanitized.feature.names <- gsub("[[:punct:]]", ".", feature.names#Name)
-# 2: removes multiple dots (in this case, two or more)
-    # sanitized.feature.names <-  gsub("[\\.]{2,3}", "", feature.names#Name)
-# 3: remove the terminal dot
-    # sanitized.feature.names <- gsub("(\\.)$", "", feature.names#Name)
+names(whole.dataset) <- c( "Subject.ID", "Activity.Name", sanitized.feature.names$Sanitized.Name)
 
-# help from regex: http://stat.ethz.ch/R-manual/R-patched/library/base/html/regex.html
-
+# convert the activity labels to human readable form 
+    #create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
 activity.labels <- read.table( paste(dataDir, "activity_labels.txt", sep="/") )
-
     #give the columns of the activity.labels data frame suitable names
 names(activity.labels) <- c("Activity.ID", "Activity.Name")
 
-# apply()
 
-    # need to format the feature.names into variable names that are acceptable for R
-        # using a file that utilises Grep capabilities: see course_prject.R
+# testing
 
-    # 2: using the annotations
-        # a) dataset columns
+gsub(actvity.labels$Activity.ID, actvity.labels$Activity.ID, whole.dataset)
+gsub("[\\1]", "WALKING", whole.dataset)
+apply()
 
-        # this creates a sanitised feature.names vector that can be used to annotate
-            # the column names e.g. 
-    
-        # names(test.dataset) <- c( "Subject.ID", "Activity.Name", outputOfThisFunction() )
-    
-        # b) the human-readable names of the Activity.Name column
-            # use Grep routines + activity.labels
-
-# Next step: combine train.dataset and test.dataset
-    # check the required syntax
-    # a) 
-        # combined.dataset <- rbind(test.dataset, train.dataset)
-    # b) using merge() somehow ???
-
-# create subset of ONLY the mean and SD columns
-  # extract the columns that have the word Mean i.e. [Mm]ean
-  # using subset() carefully
-
-    # this will help: length(grep("mean|std", feature.names$feat.name))
-    # possible solution:  tidy.dataset <- whole.dataset[ , grep("mean|std", feature.names$Name) ]
-
-# Sort the datasets (probably optional)
-    # first by Subject.ID - probably useful :)
-    # then by Activity.Name
-    # use order: http://stackoverflow.com/questions/1296646/how-to-sort-a-dataframe-by-columns-in-r
-    # test this idea with an example dataset first!!!
+# create subset of ONLY the mean and standard deviation (std) columns
+    # obtain the required rows from the complete dataset
+meanCols <- grep("mean|std", names(whole.datasetfeature.names$feat.name, value=T)
+    # use these rows to create the tidy data
+tidyCol <- c(whole.dataset$Subject.ID, whole.dataset$Activity.Name, meanCols)
+tidy.data <- whole.dataset[, tidyCol]
 
 # then cat the output to a CSV file :) :)
-
-#instructions to test the 
-print("test data: ") ; nrow(test.dataset) ; ncol(test.dataset)
-print("training data: "); nrow(train.dataset); ncol(train.dataset)
-print("Activity labels: "); nrow(activity.labels); ncol(activity.labels)
+write.table(tidy.data, file = "tidy_data.csv", quote = F, sep = ",")
 
