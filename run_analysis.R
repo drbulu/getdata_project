@@ -81,6 +81,7 @@ names(feature.names) <- c("feature.ID", "Name")
 # clean up the feature.names entries
     # help from regex: http://stat.ethz.ch/R-manual/R-patched/library/base/html/regex.html
 
+############reformat into a function!
     # 1: removes all punctuation characters and replaces them with dots
 tmp <- gsub("[[:punct:]]", ".", feature.names$Name)
     # 2: removes multiple dots (i.e 2 or more) and replace with a single dot
@@ -94,6 +95,8 @@ sanitized.feature.names <- cbind(feature.names, Sanitized.Name)
 # Sanitized.Name contents are factors, need to coerse to characters for this to work :)
 names(whole.dataset) <- c( "Subject.ID", "Activity.Name", as.character(sanitized.feature.names$Sanitized.Name) )
 
+# works up to here
+
 # convert the activity labels to human readable form 
     #create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
 activity.labels <- read.table( paste(dataDir, "activity_labels.txt", sep="/") )
@@ -101,19 +104,42 @@ activity.labels <- read.table( paste(dataDir, "activity_labels.txt", sep="/") )
 names(activity.labels) <- c("Activity.ID", "Activity.Name")
 
 
-# testing
-
-#gsub(actvity.labels$Activity.ID, actvity.labels$Activity.ID, whole.dataset)
-#gsub("[\\1]", "WALKING", whole.dataset)
-#apply()
-
 # create subset of ONLY the mean and standard deviation (std) columns
     # obtain the required rows from the complete dataset
-meanCols <- 
-    # use these rows to create the tidy data
-tidyCol <- c(whole.dataset$Subject.ID, whole.dataset$Activity.Name, meanCols)
-tidy.data <- whole.dataset[, tidyCol]
+meanCols <- grep("[Mm]ean|std", names(whole.dataset))
+
+# use these rows to create the tidy data
+tidyCol <- c(1:2, meanCols)
+tidy.dataset <- whole.dataset[, tidyCol]
+
+# rename the Activity.Name column of the tidy.dataset
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[1] ), 
+                                    as.character( activity.labels$Activity.Name[1] ), 
+                                    tidy.dataset$Activity.Name)
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[2] ), 
+                                    as.character( activity.labels$Activity.Name[2] ), 
+                                    tidy.dataset$Activity.Name)
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[3] ), 
+                                    as.character( activity.labels$Activity.Name[3] ), 
+                                    tidy.dataset$Activity.Name)
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[4] ), 
+                                    as.character( activity.labels$Activity.Name[4] ), 
+                                    tidy.dataset$Activity.Name)
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[5] ), 
+                                    as.character( activity.labels$Activity.Name[5] ), 
+                                    tidy.dataset$Activity.Name)
+tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[6] ), 
+                                    as.character( activity.labels$Activity.Name[6] ), 
+                                    tidy.dataset$Activity.Name)
+
+#sort the tidy dataset by Subject ID
+sorted.tidy.data <- tidy.dataset[order(tidy.dataset$Subject.ID),]
 
 # then cat the output to a CSV file :) :)
-#write.table(tidy.data, file = "tidy_data.csv", quote = F, sep = ",")
+#write.table(tidy.dataset, file = "tidy_data.csv", quote = F, sep = ",")
+#write.table(sorted.tidy.data, file = "tidy_data.csv", quote = F, sep = ",")
 
+#misc, this is used to get a translation of the feature names in the tidy data
+# can then be added to the code book
+sanitized.mean.rows <- grep("[Mm]ean|std", as.character(sanitized.feature.names$Sanitized.Name))
+sanitized.Means <- sanitized.feature.names[sanitized.mean.rows,] 
