@@ -10,8 +10,8 @@ This contains background info about the project
 The aim of the current excercise is to generate a script, called run_analysis.R, that will use the information in the source dataset to construct a tidy data subset. This tidy set consists only of the variables that represent the mean and standard deviation (std) of other variables contained within the source dataset.
 
 ## Implementation instructions
-The project is comprised of a number of components: 
-1. The **run_analysis.R** script: This is run in the R environment to process the source data and produce the tidy data.
+The project is comprised of a number of components:   
+1. The **run_analysis.R** script: This is run in the R environment to process the source data and produce the tidy data.  
 2. The code book: This is supplied as the **CodeBook.md** file, which provides:   
     a) An outline of the steps used by the run_analysis.R script to produce the data  
     b) The rationale behind those steps.  
