@@ -16,3 +16,5 @@ so that they can be imported and used in R without error.
     The meaning of the various features variables are provided in the features.txt file of the source data
 
 https://class.coursera.org/getdata-003/forum/thread?thread_id=284
+
+
