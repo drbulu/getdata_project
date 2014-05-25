@@ -12,7 +12,7 @@ The aim of the current excercise is to generate a script, called run_analysis.R,
 ## Implementation instructions
 The project is comprised of a number of components: 
 1. The **run_analysis.R** script: This is run in the R environment to process the source data and produce the tidy data.
-2. The code book: This is supplied as the **CodeBook.md** file, which provides:
+2. The code book: This is supplied as the **CodeBook.md** file, which provides:   
     a) An outline of the steps used by the run_analysis.R script to produce the data  
     b) The rationale behind those steps.  
 3. The tidy data file: The filename is **tidy_data.txt**, which serves as an example of what the tidy dataset is supposed to look like.   
