@@ -1,15 +1,12 @@
 # This is the R script for processing the UCI HAR Dataset. Please consult CodeBook.md for data processing outline
 
-#Step 1: 
-    # check to see if the data directory exists as a subdir of working dir
-    # The path variables. will use a relative path :). Global to the import functions
+#Step 1:
 dataDir  <- "./UCI HAR Dataset"
-dataOption <- c("test", "train") # select is the parameter required here
+dataOption <- c("test", "train")
 
 if(!file.exists(dataDir)){
         stop('The "UCI HAR Dataset" subdirectory was not found!')
 }
-    # Reading from command line: http://tolstoy.newcastle.edu.au/R/help/06/08/32231.html
 
 #Step 2:
     # Factory functions to make the paths to the data files to import
@@ -58,32 +55,27 @@ train.y <- read.table(trainYFile)
 
 # Step 4:
     # This is where we combine the elements dataset into a single data frame
-    # may skip the head() call, just for testing
-test.dataset <- cbind(test.subject, test.y, test.X) ; head(test.dataset)
-train.dataset <- cbind(train.subject, train.y, train.X) ; head(train.dataset)
+test.dataset <- cbind(test.subject, test.y, test.X)
+train.dataset <- cbind(train.subject, train.y, train.X)
 
-# combine the test and training datasets to get the complete dataset
+    # combine the test and training datasets to get the complete dataset
 whole.dataset <- rbind(test.dataset, train.dataset)
 
-# removing redundant objects from the environment to conserve memory!
+    # removing redundant objects from the environment to conserve memory!
 rm(test.dataset, train.dataset, train.subject, train.X, train.y, 
    test.subject, test.X, test.y, trainDir, trainSubjectFile, 
    trainXFile, trainYFile, testDir, testSubjectFile, testXFile, testYFile
    )
 
-#Step 5a: - Naming the dataset columns in R acceptable format
-    #annotating data frame(s) 
-        # (or you could do this AFTER merging,to save some cycles)
-        # after all, the order of columns is the SAME!
-        # 1: preparing the annotations
-        #need to import info from features and activity 
+#Step 5: - 
+    # Naming the dataset columns in a format acceptable by R
+    # Obtain feature names
 feature.names <- read.table( paste(dataDir, "features.txt", sep="/") )
     # give the feature names data frame columns nice names
 names(feature.names) <- c("feature.ID", "Name")
  
     # clean up the feature.names entries
-        # help from regex: http://stat.ethz.ch/R-manual/R-patched/library/base/html/regex.html
-
+ 
     # 1: removes all punctuation characters and replaces them with dots
 Sanitized.Name <- gsub("[[:punct:]]", ".", feature.names$Name)
     # 2: removes multiple dots (i.e 2 or more) and replace with a single dot
