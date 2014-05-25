@@ -44,4 +44,4 @@ Note: the ***Activity.Name*** values represent the different activities describe
 
 ## Step 8: 
 Sort the tidy dataset by the **Subject.ID** column, representing each of the 30 subjects in the study (see **README.txt** as per _Step 7_. This is stored in the ***sorted.tidy.data*** variable.   
-Produce the final tidy dataset as a CSV file by writing the sorted to the **tidy_data.csv** file.
+Produce the final tidy dataset as a CSV file by writing the sorted to the **tidy_data.txt** file.

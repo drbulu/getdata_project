@@ -125,8 +125,8 @@ tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[6] )
                                     tidy.dataset$Activity.Name)
 
 # Step 8
-# Export the final tidy dataset to CSV
+# Export the final tidy dataset to a file
     # sort the tidy dataset by Subject ID
 sorted.tidy.data <- tidy.dataset[order(tidy.dataset$Subject.ID),]
-    # cat the output to a CSV file
-write.csv(sorted.tidy.data, file = "tidy_data.csv", row.names=F)
+    # cat the output to a comma separated text file
+write.table(sorted.tidy.data, file = "tidy_data.txt", sep=",", row.names=F)
