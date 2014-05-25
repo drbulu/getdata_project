@@ -168,48 +168,37 @@ Please ensure that your working directory has the required data.</p>
 <h2>Step 5:</h2>
 
 <p>Name the columns of the combined dataset columns in R acceptable format. 
-The input list of variable names is sourced from <strong>feature.txt</strong> and stored in the <em><strong>feature.names</strong></em> variable.<br/>
-This section of code uses gsub() to:<br/>
+The input list of variable names is sourced from <strong>feature.txt</strong> and stored in the <em><strong>feature.names</strong></em> variable.    </p>
+
+<p>This section of code uses <strong>gsub()</strong> to:<br/>
 1: removes all punctuation characters and replaces them with dots.<br/>
 2: removes multiple dots (i.e 2 or more) and replace with a single dot.<br/>
 3: remove dots from the end of the feature names.  </p>
 
-<pre><code># Sanitize the feature names and add them to the feature.names table
+<p>The sanitized feature names are then used to create the <strong>sanitized.feature.names</strong> variable. This is so that the feature names conform to the R variable naming conventions so that they can be imported and used in R without error. Aside from these modifications they are identical to the original names in <strong>features.txt</strong>.  </p>
 
-# Step - THis is optional
-    #misc, this is used to get a translation of the feature names in the tidy data
-    # can then be added to the code book
-# remove more unused objects to conserve mem
+<p>This section of code also creates a translation table to make it more convenient to compare the sanitized feature names created by the script with the corresponding original feature names extracted from <strong>features.txt</strong>. Note: only the feature names of variables describing <strong>mean</strong> and <strong>standard deviation (std)</strong> values have been included, since only this data will be in the final output data set.</p>
 
-Note: names: the names have been modified to conform to the R object naming conventions
-so that they can be imported and used in R without error.
+<p>These values are:
+1. Exported to a CSV file called <strong>sanitized_mean_feat_names.csv</strong> in the working directory
+2. This file can be used in conjunction with the <strong>feature_info.txt</strong> file in the <strong>/UCI HAR Dataset</strong> subdirectory.</p>
 
-give a couple of examples
+<h2>Step 6:</h2>
 
-Otherwise they are unchanged from the form in feature_names.txt file of the source data
-The meaning of the various features variables are provided in the features.txt file of the source data
-</code></pre>
+<p>Create subset of the combined dataset that includes <em>ONLY</em> the <strong>mean</strong> and <strong>standard deviation (std)</strong> features. This is stored in a variable called <strong><em>tidy.dataset</em></strong>.    </p>
 
-<h2>Step 5b: Give</h2>
+<h2>Step 7:</h2>
 
-<pre><code># convert the activity labels to human readable form 
-#create a table that contains the activity labels and their respective codes from the &quot;activity_labels.txt&quot; file
-#give the columns of the activity.labels data frame suitable names
-</code></pre>
+<p>Make values of the <strong><em>Activity.Name</em></strong> in the tidy dataset more human readable by:
+1. Creating a table containing the activity labels and their respective ID information from the &ldquo;activity_labels.txt&rdquo; file.<br/>
+2. Using this table with <strong>gsub()</strong> to convert the Activity name values from numbers to words.  </p>
 
-<p>#Step 6
-    # create subset of ONLY the mean and standard deviation (std) columns
-        # obtain the required rows from the complete dataset
-        # use these rows to create the tidy data</p>
+<p>Note: the <strong><em>Activity.Name</em></strong> values represent the different activities described in the README.txt file in the <strong>/UCI HAR Dataset</strong> subdirectory.</p>
 
-<p>#Step 7
-    # rename the Activity.Name column of the tidy.dataset
-    gsub() calls</p>
+<h2>Step 8:</h2>
 
-<h1>Step 8 - Produce final tidy data file</h1>
-
-<pre><code>#sort the tidy dataset by Subject ID then write the output to a CSV file.
-</code></pre>
+<p>Sort the tidy dataset by the <strong>Subject.ID</strong> column, representing each of the 30 subjects in the study (see <strong>README.txt</strong> as per <em>Step 7</em>. This is stored in the <strong><em>sorted.tidy.data</em></strong> variable.<br/>
+Produce the final tidy dataset as a CSV file by writing the sorted to the <strong>tidy_data.csv</strong> file.</p>
 
 </body>
 

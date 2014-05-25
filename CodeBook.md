@@ -18,41 +18,30 @@ Read the data into the local R environment using the file paths constructed in S
 ## Step 5: 
 Name the columns of the combined dataset columns in R acceptable format. 
 The input list of variable names is sourced from **feature.txt** and stored in the _**feature.names**_ variable.    
-This section of code uses gsub() to:  
+
+This section of code uses **gsub()** to:  
 1: removes all punctuation characters and replaces them with dots.  
 2: removes multiple dots (i.e 2 or more) and replace with a single dot.  
 3: remove dots from the end of the feature names.  
 
-    # Sanitize the feature names and add them to the feature.names table
+The sanitized feature names are then used to create the **sanitized.feature.names** variable. This is so that the feature names conform to the R variable naming conventions so that they can be imported and used in R without error. Aside from these modifications they are identical to the original names in **features.txt**.  
 
-    # Step - THis is optional
-        #misc, this is used to get a translation of the feature names in the tidy data
-        # can then be added to the code book
-    # remove more unused objects to conserve mem
+This section of code also creates a translation table to make it more convenient to compare the sanitized feature names created by the script with the corresponding original feature names extracted from **features.txt**. Note: only the feature names of variables describing **mean** and **standard deviation (std)** values have been included, since only this data will be in the final output data set.
 
-    Note: names: the names have been modified to conform to the R object naming conventions
-    so that they can be imported and used in R without error.
+These values are:
+1. Exported to a CSV file called **sanitized_mean_feat_names.csv** in the working directory
+2. This file can be used in conjunction with the **feature_info.txt** file in the **/UCI HAR Dataset** subdirectory.
 
-    give a couple of examples
+## Step 6:
+Create subset of the combined dataset that includes _ONLY_ the **mean** and **standard deviation (std)** features. This is stored in a variable called ***tidy.dataset***.    
 
-    Otherwise they are unchanged from the form in feature_names.txt file of the source data
-    The meaning of the various features variables are provided in the features.txt file of the source data
+## Step 7:
+Make values of the ***Activity.Name*** in the tidy dataset more human readable by:
+1. Creating a table containing the activity labels and their respective ID information from the "activity_labels.txt" file.   
+2. Using this table with **gsub()** to convert the Activity name values from numbers to words.  
 
+Note: the ***Activity.Name*** values represent the different activities described in the README.txt file in the **/UCI HAR Dataset** subdirectory.
 
-## Step 5b: Give
-    # convert the activity labels to human readable form 
-    #create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
-    #give the columns of the activity.labels data frame suitable names
-
-#Step 6
-    # create subset of ONLY the mean and standard deviation (std) columns
-        # obtain the required rows from the complete dataset
-        # use these rows to create the tidy data
-
-#Step 7
-    # rename the Activity.Name column of the tidy.dataset
-    gsub() calls
-
-# Step 8 - Produce final tidy data file 
-    #sort the tidy dataset by Subject ID then write the output to a CSV file.
-
+## Step 8: 
+Sort the tidy dataset by the **Subject.ID** column, representing each of the 30 subjects in the study (see **README.txt** as per _Step 7_. This is stored in the ***sorted.tidy.data*** variable.   
+Produce the final tidy dataset as a CSV file by writing the sorted to the **tidy_data.csv** file.

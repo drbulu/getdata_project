@@ -1,6 +1,6 @@
-This contains background info about the project
+# README
 
-Consult the Markdown tutorial online to get a better understanding of how to provide a properly formatted document for submission so that it looks neat :)
+This contains background info about the project
 
 ## Context:
 * General background reading: http://www.insideactivitytracking.com/data-science-activity-tracking-and-the-battle-for-the-worlds-top-sports-brand/
@@ -11,11 +11,11 @@ The aim of the current excercise is to generate a script, called run_analysis.R,
 
 ## Implementation instructions
 The project is comprised of a number of components: 
-1) The run_analysis.R script: This is run in the R environment to process the source data and produce the tidy data.
-2) The code book: This is supplied as the CodeBook.md file, which provides  
+1) The **run_analysis.R** script: This is run in the R environment to process the source data and produce the tidy data.
+2) The code book: This is supplied as the **CodeBook.md** file, which provides:
     a) An outline of the steps used by the run_analysis.R script to produce the data  
     b) The rationale behind those steps.  
-3) The tidy data: This is provided as an example of the expected output of run_analysis.R.
+3) This readme file :)
 
 ## Note
 Note: it is important to run the script in a working directory that contains the script if you call the **list.files()** command in the R console and you cannot see the "UCI HAR Dataset"... things will not work out for you.   

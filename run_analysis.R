@@ -67,56 +67,44 @@ rm(test.dataset, train.dataset, train.subject, train.X, train.y,
    trainXFile, trainYFile, testDir, testSubjectFile, testXFile, testYFile
    )
 
-#Step 5: - 
-    # Naming the dataset columns in a format acceptable by R
+#Step 5:
+# Naming the dataset columns in a format acceptable by R
     # Obtain feature names
 feature.names <- read.table( paste(dataDir, "features.txt", sep="/") )
     # give the feature names data frame columns nice names
 names(feature.names) <- c("feature.ID", "Name")
- 
-    # clean up the feature.names entries
- 
-    # 1: removes all punctuation characters and replaces them with dots
+     # clean up the feature.names entries
+     # 1: removes all punctuation characters and replaces them with dots
 Sanitized.Name <- gsub("[[:punct:]]", ".", feature.names$Name)
     # 2: removes multiple dots (i.e 2 or more) and replace with a single dot
 Sanitized.Name <- gsub("[\\.]{2,5}", ".", Sanitized.Name)
     # 3: remove dots from the end of the feature names
 Sanitized.Name <- gsub("(\\.)+$", "", Sanitized.Name)
-
-    # Sanitize the feature names and add them to the feature.names table
+    # Add the sanitized feature names to the feature.names table
 sanitized.feature.names <- cbind(feature.names, Sanitized.Name)
-
-    # Step - THis is optional
-        #misc, this is used to get a translation of the feature names in the tidy data
-        # can then be added to the code book
+    # Create a descriptive file to document the conversion of feature names in the tidy data
 sanitized.mean.rows <- grep("[Mm]ean|std", as.character(sanitized.feature.names$Sanitized.Name))
 sanitized.Means <- sanitized.feature.names[sanitized.mean.rows,]
-write.csv(sanitized.Means, file = "sanitized.means.csv", row.names=F)
-
+write.csv(sanitized.Means, file = "sanitized_mean_feat_names.csv", row.names=F)
     # Sanitized.Name contents are factors, need to coerse to characters for this to work :)
 names(whole.dataset) <- c( "Subject.ID", "Activity.Name", as.character(sanitized.feature.names$Sanitized.Name) )
-
     # remove more unused objects to conserve mem
 rm(sanitized.feature.names, sanitized.mean.rows, sanitized.Means, Sanitized.Name)
 
-# Step 5b: Give 
-    # convert the activity labels to human readable form 
-    #create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
-activity.labels <- read.table( paste(dataDir, "activity_labels.txt", sep="/") )
-    #give the columns of the activity.labels data frame suitable names
-names(activity.labels) <- c("Activity.ID", "Activity.Name")
-
-#Step 6
-    # create subset of ONLY the mean and standard deviation (std) columns
-        # obtain the required rows from the complete dataset
+# Step 6: 
+# create subset of ONLY the mean and standard deviation (std) columns
+    # obtain the required rows from the complete dataset
 meanCols <- grep("[Mm]ean|std", names(whole.dataset))
-
     # use these rows to create the tidy data
 tidyCol <- c(1:2, meanCols)
 tidy.dataset <- whole.dataset[, tidyCol]
 
 #Step 7
-    # rename the Activity.Name column of the tidy.dataset
+# Make Activity.Name values into more human readable format
+    # create a table that contains the activity labels and their respective codes from the "activity_labels.txt" file
+activity.labels <- read.table( paste(dataDir, "activity_labels.txt", sep="/") )
+names(activity.labels) <- c("Activity.ID", "Activity.Name")
+    # rename values in the rows of the tidy.dataset Activity.Name column
 tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[1] ), 
                                     as.character( activity.labels$Activity.Name[1] ), 
                                     tidy.dataset$Activity.Name)
@@ -137,9 +125,8 @@ tidy.dataset$Activity.Name <- gsub( as.numeric( activity.labels$Activity.ID[6] )
                                     tidy.dataset$Activity.Name)
 
 # Step 8
-    #sort the tidy dataset by Subject ID
+# Export the final tidy dataset to CSV
+    # sort the tidy dataset by Subject ID
 sorted.tidy.data <- tidy.dataset[order(tidy.dataset$Subject.ID),]
-
-# then cat the output to a CSV file :) :)
+    # cat the output to a CSV file
 write.csv(sorted.tidy.data, file = "tidy_data.csv", row.names=F)
-
